@@ -34,7 +34,7 @@ const calculaStatusAluno = (media) => {
     }
 }
 
-// Adiciona uma nova linha na tabela
+// Increase the student's grade
 buttonADD.addEventListener('click', (e) =>{
     if(input.value != ''){
         e.preventDefault();
@@ -50,13 +50,13 @@ buttonADD.addEventListener('click', (e) =>{
 
         // Cria os elementos da tabela e adiciona as classes do Bulma
         let btnPlus = document.createElement('button');
-        btnPlus.innerText = "Aumentar nota";
+        btnPlus.innerText = "+ nota";
         btnPlus.classList.add("button");
         btnPlus.classList.add("is-primary");
         btnPlus.classList.add("plus");
 
         let btnMin = document.createElement('button');
-        btnMin.innerText = "Diminuir nota";
+        btnMin.innerText = "- nota";
         btnMin.classList.add("button");
         btnMin.classList.add("is-info");
         btnMin.classList.add("minus");
@@ -115,5 +115,43 @@ buttonADD.addEventListener('click', (e) =>{
 tabela.addEventListener('click', removeStundents = (e) => {
     if(e.target.classList.contains('rem')){
         e.target.parentElement.parentElement.remove();
+    }
+});
+
+// add 0.5 to the student's grade
+tabela.addEventListener('click', addGrade = (e) => {
+    if(e.target.classList.contains('plus')){
+        let tdNota = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling;
+        let tdMedia = e.target.parentElement.previousElementSibling.previousElementSibling;
+        let tdStatus = e.target.parentElement.previousElementSibling;
+
+        let nota = parseFloat(tdNota.textContent);
+        let media = parseFloat(tdMedia.textContent);
+
+        if(nota < 10){
+            tdNota.textContent = (nota + 0.5).toFixed(1);
+            tdMedia.textContent = (media + 0.5).toFixed(2);
+            tdStatus.textContent = calculaStatusAluno(media + 0.5);
+        }
+    }
+});
+
+// minus 0.5 to the stunent's grade
+tabela.addEventListener('click', minusGrade = (e) => {
+    if(e.target.classList.contains('minus')){
+        let tdNota1 = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling;
+        let tdNota2 = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling;
+        let tdNota3 = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling;
+        let tdMedia = e.target.parentElement.previousElementSibling.previousElementSibling;
+        let tdStatus = e.target.parentElement.previousElementSibling;
+
+        let nota = parseFloat(tdNota.textContent);
+        let media = parseFloat(tdMedia.textContent);
+
+        if(nota < 10){
+            tdNota.textContent = (nota + 0.5).toFixed(1);
+            tdMedia.textContent = (media + 0.5).toFixed(2);
+            tdStatus.textContent = calculaStatusAluno(media + 0.5);
+        }
     }
 });
