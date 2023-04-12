@@ -17,7 +17,7 @@ function geraNota() {
 }
 
 // Gera a média das 3 notas do aluno inserido com até 2 casas decimais.
-const calculaMedia = (nota1, nota2, nota3) => {
+function calculaMedia  (nota1, nota2, nota3) {
     let somaNotas = nota1 + nota2 + nota3;
     let media = somaNotas / 3;
     return media.toFixed(2);
@@ -38,10 +38,6 @@ const calculaStatusAluno = (media) => {
 buttonADD.addEventListener('click', (e) =>{
     if(input.value != ''){
         e.preventDefault();
-        //input.classList.remove('is-danger');
-        //input.classList.remove('ng-invalid');
-        //input.classList.add('is-primary');
-        //input.classList.add('ng-valid');
 
         // Cria as variaveis que serão utilizadas para criar os elementos da tabela
         let nome = input.value;
@@ -109,7 +105,15 @@ buttonADD.addEventListener('click', (e) =>{
         input.value = '';
     } else {
         input.classList.add('is-danger');
-        //alert('Preencha o campo de texto!');
+        input.classList.add('ng-invalid');
     }
     
+});
+
+
+// Remove Stundents from table, button stundents
+tabela.addEventListener('click', removeStundents = (e) => {
+    if(e.target.classList.contains('rem')){
+        e.target.parentElement.parentElement.remove();
+    }
 });
