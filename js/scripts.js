@@ -4,11 +4,6 @@ const tabela = document.querySelector('.table');
 const buttonADD = document.querySelector('.is-primary');
 const buttonDEL = document.querySelector('.is-danger');
 
-// Add the class 'is-danger' to the input while the user not digite on the input field
-//input.classList.remove('is-primary');
-//input.classList.remove('ng-valid');
-//input.classList.add('is-danger');
-//input.classList.add('ng-invalid');
 
 // Gera um número aleatório entre 0.0 e 10.0 com até 1 casa decimal.
 function geraNota() {
@@ -18,9 +13,7 @@ function geraNota() {
 
 // Gera a média das 3 notas do aluno inserido com até 2 casas decimais.
 function calculaMedia  (nota1, nota2, nota3) {
-    let somaNotas = nota1 + nota2 + nota3;
-    let media = somaNotas / 3;
-    return media.toFixed(2);
+    return (nota1 + nota2 + nota3) / 3;
 }
 
 // Verifica se o aluno está aprovado, em recuperação ou reprovado.
@@ -121,17 +114,40 @@ tabela.addEventListener('click', removeStundents = (e) => {
 // add 0.5 to the student's grade
 tabela.addEventListener('click', addGrade = (e) => {
     if(e.target.classList.contains('plus')){
-        let tdNota = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling;
+        // Seleciona as colunas das notas da média e do status
+        let tdNota1 = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling;
+        let tdNota2 = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling;
+        let tdNota3 = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling;
         let tdMedia = e.target.parentElement.previousElementSibling.previousElementSibling;
         let tdStatus = e.target.parentElement.previousElementSibling;
 
-        let nota = parseFloat(tdNota.textContent);
-        let media = parseFloat(tdMedia.textContent);
+        // Converte as notas para float
+        let nota1 = parseFloat(tdNota1.textContent);
+        let nota2 = parseFloat(tdNota2.textContent);
+        let nota3 = parseFloat(tdNota3.textContent);
 
-        if(nota < 10){
-            tdNota.textContent = (nota + 0.5).toFixed(1);
-            tdMedia.textContent = (media + 0.5).toFixed(2);
-            tdStatus.textContent = calculaStatusAluno(media + 0.5);
+        // Verifica se a nota é menor que 10, se for, adiciona 0.5 em cada nota
+        if(nota1 < 10){
+            nota1 += 0.5;
+            tdNota1.textContent = nota1;
+        }
+        if(nota2 < 10){
+            nota2 += 0.5;
+            tdNota2.textContent = nota2;
+        }
+        if(nota3 < 10){
+            nota3 += 0.5;
+            tdNota3.textContent = nota3;
+        }
+
+        // Calcula a média e o status do aluno
+        let mA = parseFloat(calculaMedia(nota1, nota2, nota3));
+        let sA = calculaStatusAluno(mA);
+
+        // Verifica se a média é menor ou igual a 10, se for, atualiza a média e o status do aluno
+        if(mA <= 10.00){
+            tdMedia.textContent = mA.toFixed(2);
+            tdStatus.textContent = sA;
         }
     }
 });
@@ -139,19 +155,49 @@ tabela.addEventListener('click', addGrade = (e) => {
 // minus 0.5 to the stunent's grade
 tabela.addEventListener('click', minusGrade = (e) => {
     if(e.target.classList.contains('minus')){
-        let tdNota1 = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling;
+        let tdNota1 = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling;
         let tdNota2 = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling;
-        let tdNota3 = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling;
+        let tdNota3 = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling;
         let tdMedia = e.target.parentElement.previousElementSibling.previousElementSibling;
         let tdStatus = e.target.parentElement.previousElementSibling;
 
-        let nota = parseFloat(tdNota.textContent);
+        let nota1 = parseFloat(tdNota1.textContent) - 0.5;
+        let nota2 = parseFloat(tdNota2.textContent) - 0.5;
+        let nota3 = parseFloat(tdNota3.textContent) - 0.5;
         let media = parseFloat(tdMedia.textContent);
+        let statusAluno = tdStatus.textContent;
 
-        if(nota < 10){
-            tdNota.textContent = (nota + 0.5).toFixed(1);
-            tdMedia.textContent = (media + 0.5).toFixed(2);
-            tdStatus.textContent = calculaStatusAluno(media + 0.5);
+        media = calculaMedia(nota1, nota2, nota3);
+        statusAluno = calculaStatusAluno(media);
+
+        if(nota1 >= 0){
+            tdNota1.textContent = (nota1).toFixed(1);
+        }
+        if(nota2 >= 0){
+            tdNota2.textContent = (nota2).toFixed(1);
+        }
+        if(nota3 >= 0){
+            tdNota3.textContent = (nota3).toFixed(1);
+        }
+        if(media >= 0){
+            tdMedia.textContent = media.toFixed(2);
+            tdStatus.textContent = statusAluno;
         }
     }
+});
+
+// function to exlude the stundent's with worst average grade
+buttonDEL.addEventListener('click', excluirPiorMedia =() =>{
+    let tdMedia = document.querySelectorAll('td:nth-child(5)');
+
+    let media = [];
+
+    for(let i = 0; i < tdMedia.length; i++){
+        media.push(parseFloat(tdMedia[i].textContent));
+    }
+
+    let menorNota = Math.min(...media);
+    let index = media.indexOf(menorNota);
+
+    //tdNota1[index].parentElement.remove();
 });
