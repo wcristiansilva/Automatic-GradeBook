@@ -5,18 +5,20 @@ const buttonADD = document.querySelector('.is-primary');
 const buttonDEL = document.querySelector('.is-danger');
 
 
-// Gera um número aleatório entre 0.0 e 10.0 com até 1 casa decimal.
+// Generates a random number between 0.0 and 10.0 with up to 1 decimal place from 0.5 to 0.5.
 function geraNota() {
-    let valor = Math.floor(Math.random() * 101);
-    return valor / 10;
+    let num = Math.round(Math.random() * 20) / 2;
+    return num;
+    /* let valor = Math.floor(Math.random() * 101);
+    return valor / 10; */
 }
 
-// Gera a média das 3 notas do aluno inserido com até 2 casas decimais.
+// Generates the average of the 3 grades of the entered student's.
 function calculaMedia  (nota1, nota2, nota3) {
     return (nota1 + nota2 + nota3) / 3;
 }
 
-// Verifica se o aluno está aprovado, em recuperação ou reprovado.
+// Check if the student is passing, in recovery or failing.
 const calculaStatusAluno = (media) => {
     if(media >= 6){
         return "Aprovado";
@@ -74,7 +76,7 @@ buttonADD.addEventListener('click', (e) =>{
         tdNota1.textContent = nota1;
         tdNota2.textContent = nota2;
         tdNota3.textContent = nota3;
-        tdMedia.textContent = mediaAluno;
+        tdMedia.textContent = mediaAluno.toFixed(2);
         tdStatus.textContent = statusAluno;
 
         // Adiciona os botões na coluna de ações
@@ -102,7 +104,6 @@ buttonADD.addEventListener('click', (e) =>{
     }
     
 });
-
 
 // Remove Stundents from table, button stundents
 tabela.addEventListener('click', removeStundents = (e) => {
@@ -145,31 +146,36 @@ tabela.addEventListener('click', addGrade = (e) => {
         let sA = calculaStatusAluno(mA);
 
         // Verifica se a média é menor ou igual a 10, se for, atualiza a média e o status do aluno
-        if(mA <= 10.00){
+        if(mA <= 10){
+            console.log(mA);
             tdMedia.textContent = mA.toFixed(2);
             tdStatus.textContent = sA;
         }
     }
 });
 
-// minus 0.5 to the stunent's grade
+// Remove 0.5 to the stunent's grade
 tabela.addEventListener('click', minusGrade = (e) => {
     if(e.target.classList.contains('minus')){
+        // Seleciona as colunas das notas das média e do status
         let tdNota1 = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling;
         let tdNota2 = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling;
         let tdNota3 = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling;
         let tdMedia = e.target.parentElement.previousElementSibling.previousElementSibling;
         let tdStatus = e.target.parentElement.previousElementSibling;
 
+        // Converte as notas para float e subtrai 0.5
         let nota1 = parseFloat(tdNota1.textContent) - 0.5;
         let nota2 = parseFloat(tdNota2.textContent) - 0.5;
         let nota3 = parseFloat(tdNota3.textContent) - 0.5;
         let media = parseFloat(tdMedia.textContent);
         let statusAluno = tdStatus.textContent;
 
+        // Calcula a média e o status do aluno
         media = calculaMedia(nota1, nota2, nota3);
         statusAluno = calculaStatusAluno(media);
 
+        // Verifica se a nota é maior que 0, se for, subtrai 0.5 em cada nota
         if(nota1 >= 0){
             tdNota1.textContent = (nota1).toFixed(1);
         }
@@ -186,18 +192,30 @@ tabela.addEventListener('click', minusGrade = (e) => {
     }
 });
 
-// function to exlude the stundent's with worst average grade
-buttonDEL.addEventListener('click', excluirPiorMedia =() =>{
-    let tdMedia = document.querySelectorAll('td:nth-child(5)');
+// Removes the worst average from the table of students
+buttonDEL.addEventListener('click', removePiorMedia = () => { 
 
-    let media = [];
+    // seleciona todas as células de média da tabela
+    let medias = document.querySelectorAll("table td:nth-child(5)");
 
-    for(let i = 0; i < tdMedia.length; i++){
-        media.push(parseFloat(tdMedia[i].textContent));
-    }
+    // inicializa com um valor muito grande ou o de sua preferencia sendo no minimo 1 acima da nota maxima como no caso 10 + 1 = 11 ou pode ser Infinity 
+    let piorMedia = 11; // or Infinity; 
+    let linhaPiorMedia;
 
-    let menorNota = Math.min(...media);
-    let index = media.indexOf(menorNota);
+    // percorre cada célula de média
+    medias.forEach((media) => {
+        // converte o texto da célula para um número
+        let valor = parseFloat(media.textContent);
 
-    //tdNota1[index].parentElement.remove();
+        // verifica se a média é a pior até agora
+        if (valor < piorMedia) {
+            piorMedia = valor;
+            // armazena a linha correspondente à pior média
+            linhaPiorMedia = media.parentNode;
+            console.log(linhaPiorMedia);
+        }
+    });
+
+    // remove the line of the table with the worst average
+    linhaPiorMedia.remove();
 });
