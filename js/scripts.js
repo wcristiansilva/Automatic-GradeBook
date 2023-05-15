@@ -1,16 +1,19 @@
+$(document).ready((e) =>{
+
 // Variables and constants declaration
-const input = document.querySelector('.input');
-const tabela = document.querySelector('.table');
-const buttonADD = document.querySelector('.is-primary');
-const buttonDEL = document.querySelector('.is-danger');
+const input = $('input.input');
+const tabela = $('table.table');
+const buttonADD = $('button.is-primary');
+const buttonDEL = $('button.is-danger');
 
 
 // Generates a random number between 0.0 and 10.0 with up to 1 decimal place from 0.5 to 0.5.
+// Generates a random number.
 function geraNota() {
-    let num = Math.round(Math.random() * 20) / 2;
-    return num;
-    /* let valor = Math.floor(Math.random() * 101);
-    return valor / 10; */
+    /* let num = Math.round(Math.random() * 20) / 2;
+    return num; */
+    let valor = Math.floor(Math.random() * 101);
+    return valor / 10;
 }
 
 // Generates the average of the 3 grades of the entered student's.
@@ -30,12 +33,12 @@ const calculaStatusAluno = (media) => {
 }
 
 // Increase the student's grade
-buttonADD.addEventListener('click', (e) =>{
-    if(input.value != ''){
+buttonADD.click((e) =>{
+    if(input.val() != ''){
         e.preventDefault();
 
         // Cria as variaveis que serão utilizadas para criar os elementos da tabela
-        let nome = input.value;
+        let nome = input.val();
         let nota1 = geraNota();
         let nota2 = geraNota();
         let nota3 = geraNota();
@@ -44,40 +47,40 @@ buttonADD.addEventListener('click', (e) =>{
         
 
         // Cria os elementos da tabela e adiciona as classes do Bulma
-        let btnPlus = document.createElement('button');
-        btnPlus.innerText = "+ nota";
-        btnPlus.classList.add("button");
-        btnPlus.classList.add("is-primary");
-        btnPlus.classList.add("plus");
+        let btnPlus = $("<button>");
+        btnPlus.val("+ nota");
+        btnPlus.addClass("button");
+        btnPlus.addClass("is-primary");
+        btnPlus.addClass("plus");
 
-        let btnMin = document.createElement('button');
-        btnMin.innerText = "- nota";
-        btnMin.classList.add("button");
-        btnMin.classList.add("is-info");
-        btnMin.classList.add("minus");
+        let btnMin = $("<button>");
+        btnMin.val("- nota");
+        btnMin.addClass("button");
+        btnMin.addClass("is-info");
+        btnMin.addClass("minus");
 
-        let btnRem = document.createElement('button');
-        btnRem.innerText = "Remover";
-        btnRem.classList.add("button");
-        btnRem.classList.add("is-warning");
-        btnRem.classList.add("rem");
+        let btnRem = $("<button>");
+        btnRem.val("Remover");
+        btnRem.addClass("button");
+        btnRem.addClass("is-warning");
+        btnRem.addClass("rem");
 
-        let tr = document.createElement('tr');
-        let tdNome = document.createElement('td');
-        let tdNota1 = document.createElement('td');
-        let tdNota2 = document.createElement('td');
-        let tdNota3 = document.createElement('td');
-        let tdMedia = document.createElement('td'); 
-        let tdStatus = document.createElement('td');
-        let tdAcoes = document.createElement('td');
+        let tr = $("<tr>");
+        let tdNome = $('<td>');
+        let tdNota1 = $('<td>');
+        let tdNota2 = $('<td>');
+        let tdNota3 = $('<td>');
+        let tdMedia = $('<td>'); 
+        let tdStatus = $('<td>');
+        let tdAcoes = $('<td>');
 
         // Adiciona os dados nas respectivas colunas criadas
-        tdNome.textContent = nome;
-        tdNota1.textContent = nota1;
-        tdNota2.textContent = nota2;
-        tdNota3.textContent = nota3;
-        tdMedia.textContent = mediaAluno.toFixed(2);
-        tdStatus.textContent = statusAluno;
+        tdNome.text(nome);
+        tdNota1.text(nota1);
+        tdNota2.text(nota2);
+        tdNota3.text(nota3);
+        tdMedia.text(mediaAluno.toFixed(2));
+        tdStatus.text(statusAluno);
 
         // Adiciona os botões na coluna de ações
         tdAcoes.appendChild(btnPlus);
@@ -97,23 +100,23 @@ buttonADD.addEventListener('click', (e) =>{
         tabela.appendChild(tr);
 
         // Limpa o campo de texto
-        input.value = '';
+        input.val('');
     } else {
-        input.classList.add('is-danger');
-        input.classList.add('ng-invalid');
+        input.addClass('is-danger');
+        input.addClass('ng-invalid');
     }
     
 });
 
 // Remove Stundents from table, button stundents
-tabela.addEventListener('click', removeStundents = (e) => {
+tabela.click(removeStundents = (e) => {
     if(e.target.classList.contains('rem')){
         e.target.parentElement.parentElement.remove();
     }
 });
 
 // add 0.5 to the student's grade
-tabela.addEventListener('click', addGrade = (e) => {
+tabela.click(addGrade = (e) => {
     if(e.target.classList.contains('plus')){
         // Seleciona as colunas das notas da média e do status
         let tdNota1 = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling;
@@ -128,17 +131,26 @@ tabela.addEventListener('click', addGrade = (e) => {
         let nota3 = parseFloat(tdNota3.textContent);
 
         // Verifica se a nota é menor que 10, se for, adiciona 0.5 em cada nota
-        if(nota1 < 10){
+        if(nota1 + 0.5 > 10){
+            nota1 = 10.0;
+            tdNota1.text(nota1);
+        } else {
             nota1 += 0.5;
-            tdNota1.textContent = nota1;
+            tdNota1.text(nota1);
         }
-        if(nota2 < 10){
+        if(nota2 + 0.5 > 10){
+            nota2 = 10.0;
+            tdNota2.text(nota2);
+        } else {
             nota2 += 0.5;
-            tdNota2.textContent = nota2;
+            tdNota2.text(nota2);
         }
-        if(nota3 < 10){
+        if(nota3 + 0.5 > 10){
+            nota3 = 10.0;
+            tdNota3.text(nota3);
+        } else {
             nota3 += 0.5;
-            tdNota3.textContent = nota3;
+            tdNota3.text(nota3);
         }
 
         // Calcula a média e o status do aluno
@@ -147,15 +159,15 @@ tabela.addEventListener('click', addGrade = (e) => {
 
         // Verifica se a média é menor ou igual a 10, se for, atualiza a média e o status do aluno
         if(mA <= 10){
-            console.log(mA);
-            tdMedia.textContent = mA.toFixed(2);
-            tdStatus.textContent = sA;
+            //console.log(mA);
+            tdMedia.text(mA.toFixed(2));
+            tdStatus.text(sA);
         }
     }
 });
 
 // Remove 0.5 to the stunent's grade
-tabela.addEventListener('click', minusGrade = (e) => {
+tabela.click(minusGrade = (e) => {
     if(e.target.classList.contains('minus')){
         // Seleciona as colunas das notas das média e do status
         let tdNota1 = e.target.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling;
@@ -176,27 +188,39 @@ tabela.addEventListener('click', minusGrade = (e) => {
         statusAluno = calculaStatusAluno(media);
 
         // Verifica se a nota é maior que 0, se for, subtrai 0.5 em cada nota
-        if(nota1 >= 0){
-            tdNota1.textContent = (nota1).toFixed(1);
+        if(nota1 - 0.5 <= 0){
+            nota1 = 0.0;
+            tdNota1.text(nota1.toFixed(1));
+        } else {
+            nota1 -= 0.5;
+            tdNota1.text(nota1.toFixed(1));
         }
-        if(nota2 >= 0){
-            tdNota2.textContent = (nota2).toFixed(1);
+        if(nota2 - 0.5 <= 0){
+            nota2 = 0.0;
+            tdNota2.text(nota2.toFixed(1));
+        } else {
+            nota2 -= 0.5;
+            tdNota2.text(nota2.toFixed(1));
         }
-        if(nota3 >= 0){
-            tdNota3.textContent = (nota3).toFixed(1);
+        if(nota3 - 0.5 <= 0){
+            nota3 = 0.0;
+            tdNota3.text(nota3.toFixed(1));
+        } else {
+            nota3 -= 0.5;
+            tdNota3.text(nota3.toFixed(1));
         }
-        if(media >= 0){
-            tdMedia.textContent = media.toFixed(2);
-            tdStatus.textContent = statusAluno;
+        if(media <= 0){
+            tdMedia.text(media.toFixed(2));
+            tdStatus.text(statusAluno);
         }
     }
 });
 
 // Removes the worst average from the table of students
-buttonDEL.addEventListener('click', removePiorMedia = () => { 
+buttonDEL.click(removePiorMedia = () => { 
 
     // seleciona todas as células de média da tabela
-    let medias = document.querySelectorAll("table td:nth-child(5)");
+    let medias = document.querySelectorAll("table <td>:nth-child(5)");
 
     // inicializa com um valor muito grande ou o de sua preferencia sendo no minimo 1 acima da nota maxima como no caso 10 + 1 = 11 ou pode ser Infinity 
     let piorMedia = 11; // or Infinity; 
@@ -212,10 +236,12 @@ buttonDEL.addEventListener('click', removePiorMedia = () => {
             piorMedia = valor;
             // armazena a linha correspondente à pior média
             linhaPiorMedia = media.parentNode;
-            console.log(linhaPiorMedia);
+            //console.log(linhaPiorMedia);
         }
     });
 
     // remove the line of the table with the worst average
     linhaPiorMedia.remove();
+});
+
 });
